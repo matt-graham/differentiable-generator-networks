@@ -71,3 +71,28 @@ class ParametricNonlinearityLayer(lasagne.layers.Layer):
         alpha = self.alpha.dimshuffle(pattern)
         return 0.5 * (((input**2 + 1)**0.5 + input)**alpha -
                       ((input**2 + 1)**0.5 - input)**alpha)
+
+       
+def feedforward_net(input_var, input_dim, output_dim, n_hiddens, 
+                    hidden_nonlinearity=lasagne.nonlinearities.tanh, 
+                    output_nonlinearity=lasagne.nonlinearities.linear, 
+                    use_skip_connections=True):
+  if isinstance(hidden_nonlinearity, basestring):
+      hidden_nonlinearity = getattr(
+          lasagne.nonlinearities, hidden_nonlinearity)
+  if isinstance(output_nonlinearity, basestring):
+      output_nonlinearity = getattr(
+          lasagne.nonlinearities, output_nonlinearity)
+  net = lasagne.layers.InputLayer((None, input_dim), input_var)
+  for i, n_hidden in enumerate(n_hiddens):
+      if i >= 1 and n_hiddens[i - 1] == n_hidden:
+          net_1 = lasagne.layers.DenseLayer(
+              net, n_hidden, nonlinearity=hidden_nonlinearity)
+          net = lasagne.layers.ElemwiseSumLayer([net, net_1])
+      else:
+          net = lasagne.layers.DenseLayer(
+              net, n_hidden, nonlinearity=hidden_nonlinearity)
+  net = lasagne.layers.DenseLayer(encoder_net, output_dim, 
+                                  nonlinearity=output_nonlinearity)
+  return net
+

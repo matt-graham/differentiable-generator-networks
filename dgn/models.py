@@ -147,7 +147,7 @@ class GaussianVariationalAutoencoder(BaseVariationalAutoencoder):
             u = u[None, :]
         z, n = u[:, :self.z_dim], u[:, self.z_dim:self.z_dim + self.x_dim]
         mean, log_var = self.x_gvn_z(z)
-        return tt.squeeze(mean + np.exp(0.5 * log_var) * n)
+        return tt.squeeze(mean + tt.exp(0.5 * log_var) * n)
 
     def sample_inputs(self, n_sample):
         return self.random_stream.normal((n_sample, self.z_dim + self.x_dim))

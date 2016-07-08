@@ -92,7 +92,7 @@ def feedforward_net(input_var, input_dim, output_dim, n_hiddens,
       else:
           net = lasagne.layers.DenseLayer(
               net, n_hidden, nonlinearity=hidden_nonlinearity)
-  net = lasagne.layers.DenseLayer(encoder_net, output_dim, 
-                                  nonlinearity=output_nonlinearity)
+  net = lasagne.layers.DenseLayer(
+      net, output_dim, nonlinearity=output_nonlinearity)
   return net
 

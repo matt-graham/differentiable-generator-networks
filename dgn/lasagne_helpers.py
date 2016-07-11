@@ -85,7 +85,7 @@ def feedforward_net(input_var, input_dim, output_dim, n_hiddens,
           lasagne.nonlinearities, output_nonlinearity)
   net = lasagne.layers.InputLayer((None, input_dim), input_var)
   for i, n_hidden in enumerate(n_hiddens):
-      if i >= 1 and n_hiddens[i - 1] == n_hidden:
+      if i >= 1 and n_hiddens[i - 1] == n_hidden and use_skip_connections:
           net_1 = lasagne.layers.DenseLayer(
               net, n_hidden, nonlinearity=hidden_nonlinearity)
           net = lasagne.layers.ElemwiseSumLayer([net, net_1])
